@@ -10,17 +10,17 @@ class Game():
         return self.board.size()
     def add_observer(self, obs):
         self.board.add_observer(obs)
-    def add_player(self, id):
-        self.players[id] = self.board.spawn_snake()
-        return self.players[id]
-    def remove_player(self, id):
-        self.players[id].alive = False
-        del self.players[id]
+    def add_player(self, identifier):
+        self.players[identifier] = self.board.spawn_snake()
+        return self.players[identifier]
+    def remove_player(self, identifier):
+        self.players[identifier].alive = False
+        del self.players[identifier]
     def update(self):
         for snake in self.players.itervalues():
             snake.update(self.board)
-    def move(self, id, direction):
-        snake = self.players[id]
+    def move(self, identifier, direction):
+        snake = self.players[identifier]
         if direction == 'left':
             snake.left()
         elif direction == 'right':

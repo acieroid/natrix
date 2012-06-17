@@ -1,4 +1,4 @@
-from random import randint, choice
+from random import choice
 from snake import Snake
 
 def random_color():
@@ -9,8 +9,9 @@ class Board():
     def __init__(self, width, height):
         self.width = width
         self.height = height
-        self.cases = [[None for y in xrange(height)] for x in xrange(width)]
+        self.cases = [[None for _ in xrange(height)] for _ in xrange(width)]
         self.observers = []
+        self.food = (0, 0)
         self.spawn_food()
     def add_observer(self, observer):
         self.observers.append(observer)

@@ -29,10 +29,12 @@ class GameConnection(tornadio2.conn.SocketConnection):
         game.remove_player(self)
         self.connections.remove(self)
 
+    def on_message(self, data):
+        pass
+
     @tornadio2.event
     def move(self, direction):
         game.move(self, direction)
-
     @tornadio2.event
     def update(self, direction):
         game.update()
@@ -50,7 +52,6 @@ GameRouter = tornadio2.router.TornadioRouter(GameConnection)
 
 sock_app = tornado.web.Application(
     GameRouter.urls,
-    # TODO: needed ?
     #flash_policy_port = 843,
     #flash_policy_file = '../socket.io/flashpolicy.xml'),
     socket_io_port = 8002
