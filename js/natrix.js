@@ -12,6 +12,8 @@ function init() {
     sock.on('used', new_case);
     sock.on('food', new_food);
     $(document).keydown(handleKeyboard);
+
+    $('#join').click(function () { sock.emit('join', ''); });
 };
 
 function handleKeyboard(e) {

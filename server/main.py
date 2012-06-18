@@ -20,24 +20,25 @@ class GameConnection(tornadio2.conn.SocketConnection):
     connections = set()
     def on_open(self, info):
         self.emit('board_size', game.size())
-        snake = game.add_player(self)
-        snake.add_observer(self)
         game.add_observer(self)
         self.connections.add(self)
  
     def on_close(self):
-        game.remove_player(self)
         self.connections.remove(self)
+        if game.has_player(self):
+            game.remove_player(self)
 
     def on_message(self, data):
         pass
 
     @tornadio2.event
     def move(self, direction):
-        game.move(self, direction)
+        if game.has_player(self):
+            game.move(self, direction)
     @tornadio2.event
-    def update(self, direction):
-        game.update()
+    def join(self, args):
+        snake = game.add_player(self)
+        snake.add_observer(self)
 
     def case_freed(self, snake, pos):
         for c in self.connections:

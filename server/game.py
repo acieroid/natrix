@@ -13,6 +13,8 @@ class Game():
     def add_player(self, identifier):
         self.players[identifier] = self.board.spawn_snake()
         return self.players[identifier]
+    def has_player(self, identifier):
+        return identifier in self.players
     def remove_player(self, identifier):
         self.players[identifier].alive = False
         del self.players[identifier]
