@@ -8,6 +8,8 @@ class Game():
         self.running = False
     def size(self):
         return self.board.size()
+    def used_cases(self):
+        return self.board.used_cases()
     def add_observer(self, obs):
         self.board.add_observer(obs)
     def add_player(self, identifier):

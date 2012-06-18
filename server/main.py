@@ -20,6 +20,8 @@ class GameConnection(tornadio2.conn.SocketConnection):
     connections = set()
     def on_open(self, info):
         self.emit('board_size', game.size())
+        for info in game.used_cases():
+            self.emit('used', info)
         game.add_observer(self)
         self.connections.add(self)
  

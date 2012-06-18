@@ -44,6 +44,11 @@ class Board():
         return choice([_ for _ in self.free_positions()])
     def random_direction(self, pos):
         return choice([_ for _ in self.free_directions(pos)])
+    def used_cases(self):
+        for x in xrange(self.width):
+            for y in xrange(self.height):
+                if not self.is_free((x, y)):
+                    yield ((x, y), self.cases[x][y])
     def spawn_snake(self):
         pos = self.random_position()
         direction = self.random_direction(pos)
