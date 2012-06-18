@@ -30,9 +30,9 @@ class Snake():
 
             if board.has_food(new_pos):
                 board.spawn_food()
-                self.to_grow += 1
+                self.to_grow += 2
         else:
-            self.alive = False
+            self.die()
     def left(self):
         self.direction = (-1, 0)
     def right(self):
@@ -41,3 +41,10 @@ class Snake():
         self.direction = (0, -1)
     def down(self):
         self.direction = (0, 1)
+    def is_alive(self):
+        return self.alive
+    def die(self):
+        self.alive = False
+        for pos in self.positions:
+            for obs in self.observers:
+                obs.case_freed(self, pos)

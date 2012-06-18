@@ -21,8 +21,12 @@ class Game():
         self.players[identifier].alive = False
         del self.players[identifier]
     def update(self):
-        for snake in self.players.itervalues():
-            snake.update(self.board)
+        for k in self.players.keys():
+            snake = self.players[k]
+            if snake.is_alive():
+                snake.update(self.board)
+            else:
+                del self.players[k]
     def move(self, identifier, direction):
         snake = self.players[identifier]
         if direction == 'left':
