@@ -3,7 +3,7 @@ from threading import Timer
 
 class Game():
     def __init__(self):
-        self.board = Board(25, 25)
+        self.board = Board(128, 128)
         self.players = {}
         self.running = False
     def size(self):
@@ -18,7 +18,7 @@ class Game():
     def has_player(self, identifier):
         return identifier in self.players
     def remove_player(self, identifier):
-        self.players[identifier].alive = False
+        self.players[identifier].die()
         del self.players[identifier]
     def update(self):
         for k in self.players.keys():
@@ -40,7 +40,7 @@ class Game():
     def run(self):
         if self.running:
             self.update()
-            Timer(0.2, self.run).start()
+            Timer(0.05, self.run).start()
     def start(self):
         self.running = True
         self.run()

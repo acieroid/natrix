@@ -1,6 +1,6 @@
 var context;
 var sock;
-var BLOCK_SIZE = 16;
+var BLOCK_SIZE = 4;
 
 function init() {
     context = $('#canvas')[0].getContext('2d');
@@ -53,6 +53,7 @@ function valid_name(name) {
 
 function log(str) {
     $('#log').append(str + '<br/>')
+    $('#log').scrollTop($('#log')[0].scrollHeight);
 }
 
 function fill_case(pos, color) {
