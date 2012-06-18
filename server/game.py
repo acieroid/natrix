@@ -12,8 +12,8 @@ class Game():
         return self.board.used_cases()
     def add_observer(self, obs):
         self.board.add_observer(obs)
-    def add_player(self, identifier):
-        self.players[identifier] = self.board.spawn_snake()
+    def add_player(self, identifier, name):
+        self.players[identifier] = self.board.spawn_snake(name)
         return self.players[identifier]
     def has_player(self, identifier):
         return identifier in self.players

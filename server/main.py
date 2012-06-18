@@ -38,9 +38,11 @@ class GameConnection(tornadio2.conn.SocketConnection):
         if game.has_player(self):
             game.move(self, direction)
     @tornadio2.event
-    def join(self, args):
-        snake = game.add_player(self)
+    def join(self, name):
+        snake = game.add_player(self, name)
         snake.add_observer(self)
+        for c in self.connections:
+            c.emit('join', (name, snake.color))
 
     def case_freed(self, snake, pos):
         for c in self.connections:
@@ -48,6 +50,9 @@ class GameConnection(tornadio2.conn.SocketConnection):
     def new_case(self, snake, pos):
         for c in self.connections:
             c.emit('used', (pos, snake.color))
+    def snake_died(self, snake):
+        for c in self.connections:
+            c.emit('died', (snake.name, snake.color))
     def new_food(self, pos):
         self.emit('food', pos)
 

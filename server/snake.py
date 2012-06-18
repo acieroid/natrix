@@ -1,9 +1,10 @@
 class Snake():
-    def __init__(self, position, direction, color):
+    def __init__(self, position, direction, color, name):
         self.size = 1
         self.positions = [position]
         self.direction = direction
         self.color = color
+        self.name = name
         self.alive = True
         self.observers = []
         self.to_grow = 0
@@ -45,6 +46,7 @@ class Snake():
         return self.alive
     def die(self):
         self.alive = False
-        for pos in self.positions:
-            for obs in self.observers:
+        for obs in self.observers:
+            obs.snake_died(self)
+            for pos in self.positions:
                 obs.case_freed(self, pos)

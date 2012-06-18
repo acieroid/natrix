@@ -11,9 +11,21 @@ function init() {
     sock.on('free', case_freed);
     sock.on('used', new_case);
     sock.on('food', new_food);
+    sock.on('join', join);
+    sock.on('died', died);
     $(document).keydown(handleKeyboard);
 
-    $('#join').click(function () { sock.emit('join', ''); });
+    $('#join').click(function () {
+        if (valid_name($('#name').val())) {
+            sock.emit('join', $('#name').val());
+            log('Connecting');
+        }
+        else {
+            log('Invalid name');
+        }
+    });
+
+    $('#clear').click(function() { $('#log').text(''); });
 };
 
 function handleKeyboard(e) {
@@ -33,6 +45,14 @@ function handleKeyboard(e) {
     default:
         break;
     }
+}
+
+function valid_name(name) {
+    return name != ''
+}
+
+function log(str) {
+    $('#log').append(str + '<br/>')
 }
 
 function fill_case(pos, color) {
@@ -70,4 +90,16 @@ function new_case(args) {
     
 function new_food(pos) {
     fill_case(pos, '#f00');
+}
+
+function join(args) {
+    name = args[0];
+    color = args[1];
+    log('<span style="color: ' + color + '">' + name + '</span> joined the game');
+}
+
+function died(args) {
+    name = args[0];
+    color = args[1];
+    log('<span style="color: ' + color + '">' + name + '</span> died');    
 }
