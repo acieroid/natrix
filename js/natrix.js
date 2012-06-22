@@ -13,6 +13,7 @@ function init() {
     sock.on('food', new_food);
     sock.on('join', join);
     sock.on('died', died);
+    sock.on('scores', update_scores)
     $(document).keydown(handleKeyboard);
 
     $('#join').click(function () {
@@ -103,4 +104,19 @@ function died(args) {
     name = args[0];
     color = args[1];
     log('<span style="color: ' + color + '">' + name + '</span> died');    
+}
+
+function clear_scores() {
+    $('#scores').text('');
+}
+
+function add_score(name, color, score) {
+    $('#scores').append('<span style="color: ' + color + '">' +
+                        name + '</span>: ' + score + '<br/>');
+}
+function update_scores(scores) {
+    clear_scores()
+    for (i = 0; i < scores.length; i++) {
+        add_score(scores[i][0], scores[i][1], scores[i][2]);
+    }
 }

@@ -9,6 +9,7 @@ class Snake():
         self.observers = []
         self.to_grow = 2
         self.changed_direction = False
+        self.score = 0
     def add_observer(self, observer):
         self.observers.append(observer)
         for pos in self.positions:
@@ -34,11 +35,12 @@ class Snake():
             if board.has_food(new_pos):
                 board.spawn_food()
                 self.to_grow += 3
+                self.increase_score()
         else:
             self.die()
     def set_direction(self, direction):
         if (self.direction[0] == -direction[0] and
-                self.direction[1] == -direction[1]):
+            self.direction[1] == -direction[1]):
             return
         elif not self.changed_direction:
             self.direction = direction
@@ -59,3 +61,11 @@ class Snake():
             obs.snake_died(self)
             for pos in self.positions:
                 obs.case_freed(self, pos)
+    def set_score(self, score):
+        self.score = score
+        for obs in self.observers:
+            obs.score_changed(self)
+    def reset_score(self):
+        self.set_score(0)
+    def increase_score(self):
+        self.set_score(self.score+1)

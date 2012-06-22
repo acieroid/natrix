@@ -46,4 +46,6 @@ class Game():
         self.run()
     def stop(self):
         self.running = False
-
+    def get_snakes(self):
+        for k in self.players.keys():
+            yield self.players[k]

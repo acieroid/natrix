@@ -67,3 +67,5 @@ class Board():
         self.cases[x][y] = snake.color
     def snake_died(self, snake):
         pass
+    def score_changed(self, snake):
+        pass

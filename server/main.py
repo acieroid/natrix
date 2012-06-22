@@ -29,6 +29,7 @@ class GameConnection(tornadio2.conn.SocketConnection):
             self.lock.acquire()
             self.connections.add(self)
             self.lock.release()
+            self.score_changed(None)
  
     def on_close(self):
         if game.has_player(self):
@@ -68,6 +69,14 @@ class GameConnection(tornadio2.conn.SocketConnection):
         self.lock.acquire()
         for c in self.connections:
             c.emit('died', (snake.name, snake.color))
+        self.lock.release()
+    def score_changed(self, _):
+        scores = [(snake.name, snake.color, snake.score)
+                  for snake in game.get_snakes()]
+        scores.sort(key=lambda x: x[2], reverse=True)
+        self.lock.acquire()
+        for c in self.connections:
+            c.emit('scores', scores)
         self.lock.release()
     def new_food(self, pos):
         self.emit('food', pos)
