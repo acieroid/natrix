@@ -13,12 +13,13 @@ function init() {
     sock.on('food', new_food);
     sock.on('join', join);
     sock.on('died', died);
-    sock.on('scores', update_scores)
+    sock.on('scores', update_scores);
+    sock.on('nick', nick_ok);
     $(document).keydown(handleKeyboard);
 
-    $('#join').click(function () {
+    $('#nick').click(function () {
         if (valid_name($('#name').val())) {
-            sock.emit('join', $('#name').val());
+            sock.emit('nick', $('#name').val());
             log('Connecting');
         }
         else {
@@ -114,9 +115,16 @@ function add_score(name, color, score) {
     $('#scores').append('<span style="color: ' + color + '">' +
                         name + '</span>: ' + score + '<br/>');
 }
+
 function update_scores(scores) {
     clear_scores()
     for (i = 0; i < scores.length; i++) {
         add_score(scores[i][0], scores[i][1], scores[i][2]);
     }
+}
+
+function nick_ok() {
+    log('Connected');
+    $('#form').html('<input type="button" id="join" value="Join the game"/>');
+    $('#join').click(function() { sock.emit('join'); });
 }

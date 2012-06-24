@@ -1,19 +1,22 @@
 class Snake():
     def __init__(self, position, direction, color, name):
-        self.size = 1
-        self.positions = [position]
-        self.direction = direction
+        self.respawn(position, direction)
+        self.alive = False
         self.color = color
         self.name = name
-        self.alive = True
         self.observers = []
+        self.score = 0
+    def respawn(self, position, direction):
+        self.positions = [position]
+        self.direction = direction
+        self.alive = True
         self.to_grow = 2
         self.changed_direction = False
-        self.score = 0
     def add_observer(self, observer):
         self.observers.append(observer)
-        for pos in self.positions:
-            observer.new_case(self, pos)
+        if self.is_alive():
+            for pos in self.positions:
+                observer.new_case(self, pos)
     def update(self, board):
         self.changed_direction = False
         last_pos = self.positions[0]

@@ -25,8 +25,6 @@ class Game():
             snake = self.players[k]
             if snake.is_alive():
                 snake.update(self.board)
-            else:
-                del self.players[k]
     def move(self, identifier, direction):
         snake = self.players[identifier]
         if direction == 'left':
@@ -49,3 +47,6 @@ class Game():
     def get_snakes(self):
         for k in self.players.keys():
             yield self.players[k]
+    def respawn(self, identifier):
+        self.board.respawn_snake(self.players[identifier])
+        

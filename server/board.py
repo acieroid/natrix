@@ -28,7 +28,7 @@ class Board():
     def free_positions(self):
         for x in xrange(self.width):
             for y in xrange(self.height):
-                if self.is_free((x, y)):
+                if not self.cases[x][y]:
                     yield (x, y)
     def free_directions(self, position):
         (x, y) = position
@@ -47,7 +47,7 @@ class Board():
     def used_cases(self):
         for x in xrange(self.width):
             for y in xrange(self.height):
-                if not self.is_free((x, y)):
+                if self.cases[x][y]:
                     yield ((x, y), self.cases[x][y])
     def spawn_snake(self, name):
         pos = self.random_position()
@@ -55,6 +55,10 @@ class Board():
         snake = Snake(pos, direction, random_color(), name)
         snake.add_observer(self)
         return snake
+    def respawn_snake(self, snake):
+        pos = self.random_position()
+        direction = self.random_direction(pos)
+        snake.respawn(pos, direction)
     def spawn_food(self):
         self.food = self.random_position()
         for obs in self.observers:

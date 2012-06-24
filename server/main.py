@@ -6,7 +6,7 @@ import tornadio2.router
 import tornadio2.server
 import tornadio2.conn
 from game import Game
-from threading import Lock
+from rwlock import ReadWriteLock
 
 http_app = tornado.web.Application([
         (r'/', tornado.web.RedirectHandler, {'url': 'index.html'}),
@@ -19,14 +19,14 @@ game = Game()
 
 class GameConnection(tornadio2.conn.SocketConnection):
     connections = set()
-    lock = Lock()
+    lock = ReadWriteLock()
     def on_open(self, info):
         if not self in self.connections:
             self.emit('board_size', game.size())
             for info in game.used_cases():
                 self.emit('used', info)
             game.add_observer(self)
-            self.lock.acquire()
+            self.lock.acquireWrite()
             self.connections.add(self)
             self.lock.release()
             self.score_changed(None)
@@ -34,7 +34,7 @@ class GameConnection(tornadio2.conn.SocketConnection):
     def on_close(self):
         if game.has_player(self):
             game.remove_player(self)
-        self.lock.acquire()
+        self.lock.acquireWrite()
         self.connections.remove(self)
         self.lock.release()
 
@@ -46,27 +46,30 @@ class GameConnection(tornadio2.conn.SocketConnection):
         if game.has_player(self):
             game.move(self, direction)
     @tornadio2.event
-    def join(self, name):
+    def nick(self, name):
         if not game.has_player(self):
             snake = game.add_player(self, name)
             snake.add_observer(self)
-            self.lock.acquire()
+            self.lock.acquireRead()
             for c in self.connections:
-                c.emit('join', (name, snake.color))
+                c.emit('nick', (name, snake.color))
             self.lock.release()
+    @tornadio2.event
+    def join(self):
+        game.respawn(self)
 
     def case_freed(self, snake, pos):
-        self.lock.acquire()
+        self.lock.acquireRead()
         for c in self.connections:
             c.emit('free', pos)
         self.lock.release()
     def new_case(self, snake, pos):
-        self.lock.acquire()
+        self.lock.acquireRead()
         for c in self.connections:
             c.emit('used', (pos, snake.color))
         self.lock.release()
     def snake_died(self, snake):
-        self.lock.acquire()
+        self.lock.acquireRead()
         for c in self.connections:
             c.emit('died', (snake.name, snake.color))
         self.lock.release()
@@ -74,7 +77,7 @@ class GameConnection(tornadio2.conn.SocketConnection):
         scores = [(snake.name, snake.color, snake.score)
                   for snake in game.get_snakes()]
         scores.sort(key=lambda x: x[2], reverse=True)
-        self.lock.acquire()
+        self.lock.acquireRead()
         for c in self.connections:
             c.emit('scores', scores)
         self.lock.release()
