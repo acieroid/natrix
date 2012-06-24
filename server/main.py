@@ -50,13 +50,15 @@ class GameConnection(tornadio2.conn.SocketConnection):
         if not game.has_player(self):
             snake = game.add_player(self, name)
             snake.add_observer(self)
-            self.lock.acquireRead()
-            for c in self.connections:
-                c.emit('nick', (name, snake.color))
-            self.lock.release()
+            self.emit('nick', (name, snake.color))
+            self.score_changed(None)
     @tornadio2.event
     def join(self):
-        game.respawn(self)
+        snake = game.respawn(self)
+        self.lock.acquireRead()
+        for c in self.connections:
+            c.emit('join', (snake.name, snake.color))
+        self.lock.release()
 
     def case_freed(self, snake, pos):
         self.lock.acquireRead()

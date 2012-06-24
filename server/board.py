@@ -59,6 +59,7 @@ class Board():
         pos = self.random_position()
         direction = self.random_direction(pos)
         snake.respawn(pos, direction)
+        return snake
     def spawn_food(self):
         self.food = self.random_position()
         for obs in self.observers:

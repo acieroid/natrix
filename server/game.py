@@ -48,5 +48,5 @@ class Game():
         for k in self.players.keys():
             yield self.players[k]
     def respawn(self, identifier):
-        self.board.respawn_snake(self.players[identifier])
+        return self.board.respawn_snake(self.players[identifier])
         
