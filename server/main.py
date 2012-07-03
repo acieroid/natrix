@@ -98,7 +98,7 @@ sock_app = tornado.web.Application(
 
 if __name__ == '__main__':
     http_server = tornado.httpserver.HTTPServer(http_app)
-    http_server.listen(int(sys.argv[0]))
+    http_server.listen(int(sys.argv[1]))
 
     tornadio2.server.SocketServer(sock_app, auto_start=False)
     try:
