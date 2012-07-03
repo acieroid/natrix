@@ -5,6 +5,7 @@ import tornadio2
 import tornadio2.router
 import tornadio2.server
 import tornadio2.conn
+import sys
 from game import Game
 from rwlock import ReadWriteLock
 
@@ -97,7 +98,7 @@ sock_app = tornado.web.Application(
 
 if __name__ == '__main__':
     http_server = tornado.httpserver.HTTPServer(http_app)
-    http_server.listen(8001)
+    http_server.listen(sys.argv[0])
 
     tornadio2.server.SocketServer(sock_app, auto_start=False)
     try:
